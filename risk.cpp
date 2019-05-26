@@ -15,7 +15,7 @@ struct army{
 	int defender;
 };
 
-void print(int a[], const int SIZE){
+void print_army(int a[], const int SIZE){
 	cout << "{";
 	for(int i = 0; i < SIZE; i++){
 		cout << a[i];
@@ -25,14 +25,19 @@ void print(int a[], const int SIZE){
 	cout << "}\n";
 }
 
-void input(army &armies){
+void input(army &armies, int &AMOUNT){
 	cout << "Attacker: ";
 	cin >> armies.attacker;
 	cout << "Defender: ";
 	cin >> armies.defender;
+
+	cout << "Simulate so many times: ";
+	cin >> AMOUNT;
+	if(AMOUNT < 1)
+		AMOUNT = 1;
 }
 
-void fight(army &armies){
+void fight(army &armies, bool print){
 	const int ATT_SIZE = (armies.attacker >= MAX_A)? MAX_A : armies.attacker;
 	const int DEF_SIZE = (armies.defender >= MAX_D)? MAX_D : armies.defender;
 	int att[ATT_SIZE];
@@ -46,11 +51,13 @@ void fight(army &armies){
 	sort(att, att+ATT_SIZE, greater<int>());
 	sort(def, def+DEF_SIZE, greater<int>());
 
-	cout << " FIGHT!\n";
-	cout << "   Att: ";
-	print(att, ATT_SIZE);
-	cout << "   Def: ";
-	print(def, DEF_SIZE);
+	if(print){
+		cout << " FIGHT!\n";
+		cout << "   Att: ";
+		print_army(att, ATT_SIZE);
+		cout << "   Def: ";
+		print_army(def, DEF_SIZE);
+	}
 
 	for(int count = 0; count < ATT_SIZE && count < DEF_SIZE; count++){
 		if(att[count] > def[count])
@@ -60,23 +67,53 @@ void fight(army &armies){
 	}	
 }
 
-void calculate(army &armies){
+void calculate(army &armies, bool print){
 	if(armies.attacker == 0 || armies.defender == 0){
 		return;
 	}else{
-		fight(armies);
-		calculate(armies);	
+		fight(armies, print);
+		calculate(armies, print);	
 	}
+}
+
+void simulate_once(army &armies){
+	calculate(armies, true);
+	string result = (armies.attacker == 0)? "defender" : "attacker";
+	cout << "The " << result << " won!" << endl;
+}
+
+void simulate_multi(army &armies, const int &AMOUNT){
+	army copy_armies = armies;
+	int att_wins = 0, def_wins = 0;
+
+	for(int i = 0; i < AMOUNT; i++){
+		calculate(armies, false);
+		if(armies.attacker == 0)
+			def_wins++;
+		else
+			att_wins++;
+		armies = copy_armies;
+	}
+
+	cout << "  The attacker won " << att_wins << " time(s).\n";
+	cout << "  The defender won " << def_wins << " time(s).\n";
+	cout << "So the succes rate of the attackers is " << (int)(((double)att_wins / AMOUNT) * 100) << "%.\n";
+}
+
+void simulate(army &armies, const int &AMOUNT){
+	if(AMOUNT == 1)
+		simulate_once(armies);
+	else
+		simulate_multi(armies, AMOUNT);
 }
 
 int main(){
 	srand(time(0));
 	army armies;
+	int AMOUNT;
 
-	input(armies);
-	calculate(armies);
+	input(armies, AMOUNT);
+	simulate(armies, AMOUNT);
 
-	string result = (armies.attacker == 0)? "defender(s)" : "attacker(s)";
-	cout << "The " << result << " won!" << endl;
 	return 0;
 }
