@@ -10,6 +10,8 @@ using namespace std;
 #define MAX_A 3
 #define MAX_D 2
 
+int DICE = 6;
+
 struct army{
 	int attacker;
 	int defender;
@@ -44,9 +46,9 @@ void fight(army &armies, bool print){
 	int def[DEF_SIZE];
 
 	for(int i = 0; i < ATT_SIZE; i++)
-		att[i] = rand() % 6 + 1;
+		att[i] = rand() % DICE + 1;
 	for(int j = 0; j < DEF_SIZE; j++)
-		def[j] = rand() % 6 + 1;
+		def[j] = rand() % DICE + 1;
 
 	sort(att, att+ATT_SIZE, greater<int>());
 	sort(def, def+DEF_SIZE, greater<int>());
@@ -107,7 +109,10 @@ void simulate(army &armies, const int &AMOUNT){
 		simulate_multi(armies, AMOUNT);
 }
 
-int main(){
+int main(int argc, char *argv[]){
+	if(argc > 1)
+		DICE = strtol(argv[1], nullptr, 0);
+
 	srand(time(0));
 	army armies;
 	int AMOUNT;
