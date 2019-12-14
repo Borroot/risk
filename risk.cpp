@@ -12,7 +12,7 @@ using namespace std;
 
 int DICE = 6;
 
-struct army{
+struct Army{
 	int attacker;
 	int defender;
 };
@@ -27,7 +27,7 @@ void print_army(int a[], const int SIZE){
 	cout << "}\n";
 }
 
-void input(army &armies, int &AMOUNT){
+void input(Army &armies, int &AMOUNT){
 	cout << "Attacker: ";
 	cin >> armies.attacker;
 	cout << "Defender: ";
@@ -39,7 +39,7 @@ void input(army &armies, int &AMOUNT){
 		AMOUNT = 1;
 }
 
-void fight(army &armies, bool print){
+void fight(Army &armies, bool print){
 	const int ATT_SIZE = (armies.attacker >= MAX_A)? MAX_A : armies.attacker;
 	const int DEF_SIZE = (armies.defender >= MAX_D)? MAX_D : armies.defender;
 	int att[ATT_SIZE];
@@ -69,7 +69,7 @@ void fight(army &armies, bool print){
 	}	
 }
 
-void calculate(army &armies, bool print){
+void calculate(Army &armies, bool print){
 	if(armies.attacker == 0 || armies.defender == 0){
 		return;
 	}else{
@@ -78,14 +78,14 @@ void calculate(army &armies, bool print){
 	}
 }
 
-void simulate_once(army &armies){
+void simulate_once(Army &armies){
 	calculate(armies, true);
 	string result = (armies.attacker == 0)? "defender" : "attacker";
 	cout << "The " << result << " won!" << endl;
 }
 
-void simulate_multi(army &armies, const int &AMOUNT){
-	army copy_armies = armies;
+void simulate_multi(Army &armies, const int &AMOUNT){
+	Army copy_armies = armies;
 	int att_wins = 0, def_wins = 0;
 
 	for(int i = 0; i < AMOUNT; i++){
@@ -102,7 +102,7 @@ void simulate_multi(army &armies, const int &AMOUNT){
 	cout << "So the succes rate of the attackers is " << (int)(((double)att_wins / AMOUNT) * 100) << "%.\n";
 }
 
-void simulate(army &armies, const int &AMOUNT){
+void simulate(Army &armies, const int &AMOUNT){
 	if(AMOUNT == 1)
 		simulate_once(armies);
 	else
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]){
 		DICE = strtol(argv[1], nullptr, 0);
 
 	srand(time(0));
-	army armies;
+	Army armies;
 	int AMOUNT;
 
 	input(armies, AMOUNT);
