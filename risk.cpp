@@ -66,7 +66,7 @@ void fight(Army &armies, bool print){
 			armies.defender -= 1;
 		else
 			armies.attacker -= 1;
-	}	
+	}
 }
 
 void calculate(Army &armies, bool print){
@@ -74,7 +74,7 @@ void calculate(Army &armies, bool print){
 		return;
 	}else{
 		fight(armies, print);
-		calculate(armies, print);	
+		calculate(armies, print);
 	}
 }
 
